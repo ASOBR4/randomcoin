@@ -1,0 +1,17 @@
+{
+  "name": "randomcoin",
+  "version": "0.1.2",
+  "private": true,
+  "description": "RandomCoin - edualC gaming",
+  "scripts": {
+    "apk": "cap add android && node scripts/patch-android.mjs && capacitor-assets generate --android && cap sync android && cd android && ./gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.3"
+  }
+}

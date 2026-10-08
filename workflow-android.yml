@@ -1,0 +1,55 @@
+# Gera o APK do RandomCoin nos servidores do GitHub (não precisa instalar nada no seu computador).
+# Como usar: aba "Actions" > "Gerar APK" > "Run workflow". Quando terminar, baixe o arquivo em "Artifacts".
+name: Gerar APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Preparar o Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Criar o projeto Android
+        run: npx cap add android
+
+      - name: Ajustes (vibração, tela cheia, versão)
+        run: node scripts/patch-android.mjs
+
+      - name: Gerar ícone e tela de abertura
+        run: npx capacitor-assets generate --android
+
+      - name: Copiar o jogo para o app
+        run: npx cap sync android
+
+      - name: Compilar o APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Guardar o APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: RandomCoin-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

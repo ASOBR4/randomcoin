@@ -1,0 +1,9 @@
+{
+  "appId": "com.edualc.randomcoin",
+  "appName": "RandomCoin",
+  "webDir": "www",
+  "backgroundColor": "#171233",
+  "android": {
+    "backgroundColor": "#171233"
+  }
+}
